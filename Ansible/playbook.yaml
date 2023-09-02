@@ -1,0 +1,67 @@
+---
+- name: Install npm and node
+  vars_files:
+    - variable
+  hosts: remote
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Install node.js dependencies
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - npm
+          - nodejs
+
+- name: Deploying Node.js app
+  vars_files:
+    - variable
+  hosts: remote
+  become: true
+  tasks:
+    - name: Create new user
+      user:
+        name: "{{ username }}"
+        state: present
+
+
+- name: Deploying Node.js app
+  vars_files:
+    - variable
+  become_user: "{{ username }}"
+  hosts: remote
+  become: true
+  tasks:
+    - name: Copy your Node.js app to the remote server
+      copy:
+        src: "{{user_dir}}/{{location}}/nodejs-app-{{version}}.tgz"
+        dest: "{{user_dir}}/app.tgz"
+
+    - name: unarchive the file 
+      unarchive: 
+        src:  "{{user_dir}}/app.tgz"
+        dest: "{{user_dir}}"
+        remote_src: yes
+
+    - name: Install app dependencies
+      command: npm install
+      args:
+        chdir: "{{user_dir}}/package/"
+
+    - name: Start the app using node pkg manager
+      command: node server
+      args:
+        chdir: "{{user_dir}}/package/app"
+      async: 1000
+      poll: 0
+
+    - name: Test the node app is running or not
+      shell: ps aux | grep node
+      register: app_status
+    
+    - debug: msg={{app_status.stdout_lines}}

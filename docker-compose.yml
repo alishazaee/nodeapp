@@ -1,0 +1,34 @@
+version: '3.4'
+
+networks:
+  default:
+    name: web_net
+
+
+services:
+
+  web_server:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    networks:
+      - default
+    ports:
+      - 80:80
+      
+    volumes:
+       - ./nginx/conf:/etc/nginx/conf.d
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: ./simple-nodejs/
+    container_name: app
+    restart: always
+    networks:
+      - default
+
+
+
+

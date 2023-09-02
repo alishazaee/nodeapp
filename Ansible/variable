@@ -1,0 +1,5 @@
+username: ali 
+user_dir: /home/{{username}}
+version: 1.0.0
+location: /home/ali/Ansible/
+project_name: Ansible
