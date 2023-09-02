@@ -58,8 +58,9 @@ pipeline {
             steps {
                 // Copy Ansible files to the server
                 sshagent(['cd294e96-9019-40dc-9c01-315a49a609f3']) {
-                    sh 'ssh -o StrictHostKeyChecking=no root@${ANSIBLE_SERVER} "mkdir -p /root/Ansible"'
+                    sh 'ssh -o StrictHostKeyChecking=no root@${ANSIBLE_SERVER} "mkdir -p /root/Ansible ; mkdir -p /root/nginx"'
                     sh "scp -r Ansible/*  root@${ANSIBLE_SERVER}:/root/Ansible"
+                    sh "scp -r nginx/*  root@${ANSIBLE_SERVER}:/root/nginx"
                     sh "scp -r docker*  root@${ANSIBLE_SERVER}:/root"
 
                 withCredentials([sshUserPrivateKey(credentialsId: 'deployment-server', keyFileVariable: 'keyfile', usernameVariable: 'username')]) {

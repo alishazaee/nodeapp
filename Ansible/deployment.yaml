@@ -39,20 +39,6 @@
   become: true
   vars_files:
     - variable
-  tasks:
-    - name: Copy docker-compose.yaml file
-      loop:
-      - src: "{{location}}/docker-compose.yml"
-        dest: "/root/"
-      - src: "{{location}}/nginx"
-        dest: "/root/"
-      - src: "{{location}}/simple-nodejs"
-        dest: "/root/"
-
-
-      copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-      
+  tasks:      
     - name: Start Docker Compose service
       command: docker-compose -f /root/docker-compose.yml up -d
