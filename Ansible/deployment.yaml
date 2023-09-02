@@ -34,3 +34,7 @@
   tasks:      
     - name: Start Docker Compose service
       command: docker-compose -f /root/docker-compose.yml up -d
+      environment:
+        VERSION: "{{ lookup('env' , 'VERSION')}}"
+        DOCKER_REGISTRY: "{{ lookup('env' , 'DOCKER_REGISTRY')}}"
+        DOCKER_REPO: "{{ lookup('env' , 'DOCKER_REPO')}}"
