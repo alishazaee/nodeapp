@@ -54,7 +54,7 @@ pipeline {
 
 
 
-        stage('Deploy') {
+        stage('Copy files to Ansible Server') {
             steps {
                 // Copy Ansible files to the server
                 sshagent(['cd294e96-9019-40dc-9c01-315a49a609f3']) {
@@ -74,9 +74,17 @@ pipeline {
                 // }
             }
 
+        }
 
-
-
+        stage('Deploying APP') {
+            steps {
+                sshagent(['cd294e96-9019-40dc-9c01-315a49a609f3']) {
+                    sh 'ssh -o StrictHostKeyChecking=no root@${ANSIBLE_SERVER} "export VERSION=${VERSION} &&\
+                    export DOCKER_REGISTRY=${DOCKER_REGISTRY} && \
+                     export DOCKER_REPO=${DOCKER_REPO} && \ 
+                     cd Ansible &&\
+                      ansible-playbook playbook.yml"'
+            }
         }
 
 
