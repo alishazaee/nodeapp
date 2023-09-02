@@ -5,7 +5,7 @@ pipeline {
     BUILD_VERSION = "${BUILD_NUMBER}"
     DOCKER_REGISTRY = "alishazaei"
     DOCKER_REPO = "nodeapp"
-    ANSIBLE_SERVER=146.19.212.14
+    ANSIBLE_SERVER="146.19.212.14"
   }
 
   stages {
