@@ -22,8 +22,8 @@ services:
       - app
 
   app:
-    build:
-      context: ./simple-nodejs/
+
+    image: ${DOCKER_REGISTRY}/${DOCKER_REPO}:v${VERSION}
     container_name: app
     restart: always
     networks:

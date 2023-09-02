@@ -5,6 +5,7 @@ pipeline {
     BUILD_VERSION = "${BUILD_NUMBER}"
     DOCKER_REGISTRY = "alishazaei"
     DOCKER_REPO = "nodeapp"
+    ANSIBLE_SERVER=146.19.212.14
   }
 
   stages {
@@ -50,6 +51,27 @@ pipeline {
         }
       }
     }
+
+
+
+        stage('Deploy') {
+            steps {
+                // Copy Ansible files to the server
+                sshagent(['cd294e96-9019-40dc-9c01-315a49a609f3']) {
+                    sh 'ssh root@${ANSIBLE_SERVER} "mkdir -p /root/Ansible"'
+                    sh "scp -r Ansible/* root@${ANSIBLE_SERVER}:/root/Ansible"
+                withCredentials([sshUserPrivateKey(credentialsId: 'deployment-server', keyFileVariable: 'keyfile', usernameVariable: 'username')]) {
+                    sh "scp keyfile root@${ANSIBLE_SERVER}:/root/.ssh/id_rsa"
+                }
+                
+                }
+                
+                // Execute Ansible playbook on the server
+                // sshagent(['cd294e96-9019-40dc-9c01-315a49a609f3']) {
+                //     sh 'ssh user@your-server "cd /path/to/ansible && ansible-playbook playbook.yml"'
+                // }
+            }
+
 
 
 
