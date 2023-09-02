@@ -44,8 +44,7 @@ pipeline {
     stage('Build and push Docker image') {
       steps {
         script {
-            sh 'cd simple-nodejs'
-            sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_REPO}:v${VERSION} ."
+            sh "cd simple-nodejs && docker build -t ${DOCKER_REGISTRY}/${DOCKER_REPO}:v${VERSION} -f Dockerfile ."
             sh "docker push ${DOCKER_REGISTRY}/${DOCKER_REPO}:v${VERSION}"
 
         }
